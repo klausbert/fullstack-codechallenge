@@ -1,5 +1,5 @@
 export class AssetManager {
-    loadedAssets = [];
+    loadedAssets = {};
 
     constructor() {
     }
@@ -9,10 +9,12 @@ export class AssetManager {
 
         for (const [assetName, assetUrl] of Object.entries(assets)) {
             const assetPromise = this.loadSingleAsset(assetUrl, assetName);
-            assetPromises.push(assetPromise);
+            assetPromises.push(assetPromise); //  TODO: load 2 images (1 for crash mode)
         }
 
-        await Promise.all(assetPromises);
+        this.loadedAssets = await Promise.all(assetPromises).then( 
+            resolves => resolves.reduce((r, c) => ({...r, ...c }), {}) 
+        );
     }
 
     loadSingleAsset(assetUrl, assetName) {
@@ -22,8 +24,7 @@ export class AssetManager {
                 assetImage.width /= 2;
                 assetImage.height /= 2;
 
-                this.loadedAssets[assetName] = assetImage;
-                resolve();
+                resolve({ [assetName]: assetImage });
             };
             assetImage.src = assetUrl;
         });

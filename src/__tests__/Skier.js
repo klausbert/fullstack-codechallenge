@@ -3,17 +3,17 @@ import { Skier } from '../Entities/Skier'
 
 const skier = new Skier(0, 0);
 
-test('Skier equals something', () => {
+test('Skier recovers from Crash using any Arrow key', () => {
     console.log('skier log', skier)
-    // expect(skier.direction).toBe(3);
-    // expect(skier).toBe({ x: 0, y: 0, assetName: 'skierDown', direction: 3, speed: 10 });
+
+    //  initial state
     expect(skier.x).toBe(0);
     expect(skier.y).toBe(0);
     expect(skier.assetName).toBe('skierDown');
     expect(skier.direction).toBe(3);
     expect(skier.speed).toBe(10);
     
-
+    //  force crash and recover
     skier.setDirection(Constants.SKIER_DIRECTIONS.CRASH)   //  CRASH
     expect(skier.direction).toBe(Constants.SKIER_DIRECTIONS.CRASH);
     

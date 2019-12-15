@@ -24,7 +24,7 @@ export const ASSETS = {
     [SKIER_DOWN]: 'img/skier_down.png',
     [SKIER_RIGHTDOWN]: 'img/skier_right_down.png',
     [SKIER_RIGHT]: 'img/skier_right.png',
-    [SKIER_JUMP]: 'img/rhino_default.png',
+    [SKIER_JUMP]: 'img/skier_jump_3.png',
     [TREE] : 'img/tree_1.png',
     [TREE_CLUSTER] : 'img/tree_cluster.png',
     [ROCK1] : 'img/rock_1.png',
