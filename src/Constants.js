@@ -7,12 +7,14 @@ export const SKIER_LEFTDOWN = 'skierLeftDown';
 export const SKIER_DOWN = 'skierDown';
 export const SKIER_RIGHTDOWN = 'skierRightDown';
 export const SKIER_RIGHT = 'skierRight';
+export const SKIER_JUMP = 'skierJump';
 export const TREE = 'tree';
 export const TREE_CLUSTER = 'treeCluster';
 export const ROCK1 = 'rock1';
 export const ROCK2 = 'rock2';
+export const JUMP_RAMP = 'jumpRamp';
 
-export const SKIER_STARTING_SPEED = 10;
+export const SKIER_STARTING_SPEED = 5;
 export const SKIER_DIAGONAL_SPEED_REDUCER = 1.4142;
 
 export const ASSETS = {
@@ -22,10 +24,12 @@ export const ASSETS = {
     [SKIER_DOWN]: 'img/skier_down.png',
     [SKIER_RIGHTDOWN]: 'img/skier_right_down.png',
     [SKIER_RIGHT]: 'img/skier_right.png',
+    [SKIER_JUMP]: 'img/rhino_default.png',
     [TREE] : 'img/tree_1.png',
     [TREE_CLUSTER] : 'img/tree_cluster.png',
     [ROCK1] : 'img/rock_1.png',
-    [ROCK2] : 'img/rock_2.png'
+    [ROCK2] : 'img/rock_2.png',
+    [JUMP_RAMP] : 'img/jump_ramp.png'
 };
 
 export const SKIER_DIRECTIONS = {
@@ -52,3 +56,7 @@ export const KEYS = {
     UP : 38,
     DOWN : 40
 };
+
+export const OBSTACLES = {
+    DISTANCE_BETWEEN: 50
+}

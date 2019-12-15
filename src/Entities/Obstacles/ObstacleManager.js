@@ -2,7 +2,7 @@ import * as Constants from '../../Constants';
 import { randomInt } from '../../Core/Utils';
 import { Obstacle } from "./Obstacle";
 
-const DISTANCE_BETWEEN_OBSTACLES = 50;
+const DISTANCE_BETWEEN_OBSTACLES = Constants.OBSTACLES.DISTANCE_BETWEEN;
 const STARTING_OBSTACLE_GAP = 100;
 const STARTING_OBSTACLE_REDUCER = 300;
 const NEW_OBSTACLE_CHANCE = 8;
@@ -41,6 +41,9 @@ export class ObstacleManager {
     }
 
     placeNewObstacle(gameWindow, previousGameWindow) {
+        if(! previousGameWindow) {
+            return;
+        }
         const shouldPlaceObstacle = randomInt(1, NEW_OBSTACLE_CHANCE);
         if(shouldPlaceObstacle !== NEW_OBSTACLE_CHANCE) {
             return;
@@ -82,6 +85,10 @@ export class ObstacleManager {
         const newObstacle = new Obstacle(position.x, position.y);
 
         this.obstacles.push(newObstacle);
+    }
+
+    removeObstacle(index) {
+        this.obstacles = this.obstacles.filter((f, i) => i!==index)
     }
 
     calculateOpenPosition(minX, maxX, minY, maxY) {

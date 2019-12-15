@@ -20,15 +20,15 @@ test('Skier equals something', () => {
     skier.turnRight()
     expect(skier.assetName).toBeDefined();
     
-    skier.setDirection(Constants.SKIER_DIRECTIONS.CRASH)   //  CRASH
+    skier.setDirection(Constants.SKIER_DIRECTIONS.CRASH)
     skier.turnUp()
     expect(skier.assetName).toBeDefined();
     
-    skier.setDirection(Constants.SKIER_DIRECTIONS.CRASH)   //  CRASH
+    skier.setDirection(Constants.SKIER_DIRECTIONS.CRASH)
     skier.turnDown()
     expect(skier.assetName).toBeDefined();
     
-    skier.setDirection(Constants.SKIER_DIRECTIONS.CRASH)   //  CRASH
+    skier.setDirection(Constants.SKIER_DIRECTIONS.CRASH)
     skier.turnLeft()
     expect(skier.assetName).toBeDefined();
 });

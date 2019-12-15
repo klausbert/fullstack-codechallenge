@@ -2,11 +2,15 @@ import * as Constants from "../Constants";
 import { Entity } from "./Entity";
 import { intersectTwoRects, Rect } from "../Core/Utils";
 
+const JUMPING_DISTANCE = 10 * Constants.OBSTACLES.DISTANCE_BETWEEN;
+
 export class Skier extends Entity {
     assetName = Constants.SKIER_DOWN;
 
     direction = Constants.SKIER_DIRECTIONS.DOWN;
     speed = Constants.SKIER_STARTING_SPEED;
+
+    jumping_y = 0;
 
     constructor(x, y) {
         super(x, y);
@@ -19,6 +23,7 @@ export class Skier extends Entity {
 
     updateAsset() {
         this.assetName = Constants.SKIER_DIRECTION_ASSET[this.direction];
+        // this.assetName = this.jumping_y ? Constants.SKIER_JUMP : Constants.SKIER_DIRECTION_ASSET[this.direction];
     }
 
     move() {
@@ -67,7 +72,6 @@ export class Skier extends Entity {
         }
         else
         if(this.direction === Constants.SKIER_DIRECTIONS.CRASH) {
-            // this.moveSkierRight();
             this.setDirection(Constants.SKIER_DIRECTIONS.LEFT);
         }
         else {
@@ -102,9 +106,11 @@ export class Skier extends Entity {
             this.x + asset.width / 2,
             this.y - asset.height / 4
         );
-
-        const collision = obstacleManager.getObstacles().find((obstacle) => {
-            const obstacleAsset = assetManager.getAsset(obstacle.getAssetName());
+        console.log('%s obstacles', obstacleManager.getObstacles().length)
+        const collision = obstacleManager.getObstacles()
+        .find((obstacle, index) => {
+            const obstacleAssetName = obstacle.getAssetName();
+            const obstacleAsset = assetManager.getAsset(obstacleAssetName);
             const obstaclePosition = obstacle.getPosition();
             const obstacleBounds = new Rect(
                 obstaclePosition.x - obstacleAsset.width / 2,
@@ -112,8 +118,24 @@ export class Skier extends Entity {
                 obstaclePosition.x + obstacleAsset.width / 2,
                 obstaclePosition.y
             );
+            let intersected = intersectTwoRects(skierBounds, obstacleBounds);
 
-            return intersectTwoRects(skierBounds, obstacleBounds);
+            if (intersected) {
+                if (obstacleAssetName===Constants.JUMP_RAMP) {
+                    this.jumping_y = this.y + JUMPING_DISTANCE;
+                    console.log('will jump until %s (or tree is hit)', this.jumping_y)
+                    intersected = false
+                }
+                else 
+                if (this.jumping_y > this.y) {
+                    // if (obstacleAssetName!==Constants.TREE && obstacleAssetName!==Constants.TREE_CLUSTER) {
+                        console.log('Im jumping over %s, Mom!', obstacleAssetName)
+                        obstacleManager.removeObstacle(index)
+                        intersected = false
+                    // }
+                }
+            }
+            return intersected
         });
 
         if(collision) {

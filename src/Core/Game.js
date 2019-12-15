@@ -7,6 +7,7 @@ import { Rect } from './Utils';
 
 export class Game {
     gameWindow = null;
+    frameRequest = null;
 
     constructor() {
         this.assetManager = new AssetManager();
@@ -31,7 +32,7 @@ export class Game {
         this.updateGameWindow();
         this.drawGameWindow();
 
-        requestAnimationFrame(this.run.bind(this));
+        this.frameRequest = requestAnimationFrame(this.run.bind(this));
     }
 
     updateGameWindow() {
@@ -78,6 +79,8 @@ export class Game {
                 this.skier.turnDown();
                 event.preventDefault();
                 break;
+            default:
+                console.log('Key pressed:', event.which)
         }
     }
 }
