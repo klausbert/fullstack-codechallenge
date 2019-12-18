@@ -41,12 +41,16 @@ export class ObstacleManager {
     }
 
     placeNewObstacle(gameWindow, previousGameWindow) {
-        if(! previousGameWindow) {
-            return;
-        }
+
+        if(! previousGameWindow) return;
+        
         const shouldPlaceObstacle = randomInt(1, NEW_OBSTACLE_CHANCE);
-        if(shouldPlaceObstacle !== NEW_OBSTACLE_CHANCE) {
-            return;
+
+        if(shouldPlaceObstacle !== NEW_OBSTACLE_CHANCE) return;
+
+        //  get rid of unused obstacles, keep list skinny
+        if(gameWindow.top > this.obstacles[0].y) {
+            this.obstacles = this.obstacles.filter( f => f.y > gameWindow.top )
         }
 
         if(gameWindow.left < previousGameWindow.left) {

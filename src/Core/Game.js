@@ -80,17 +80,18 @@ export class Game {
                 event.preventDefault();
                 break;
             case Constants.KEYS.SPACE:
-                console.log('this.frameRequest', this.frameRequest)
                 if (this.frameRequest) {
                     cancelAnimationFrame(this.frameRequest);
                     this.frameRequest = null;
+                    console.log('Game paused...')
                 } else {
+                    console.log('Game resumed!')
                     this.run();
                 }
                 event.preventDefault();
                 break;
             default:
-                console.log('Key pressed:', event.which)
+                console.log('Other Key pressed:', event.which)
         }
     }
 }
