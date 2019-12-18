@@ -91,8 +91,8 @@ export class ObstacleManager {
         this.obstacles.push(newObstacle);
     }
 
-    removeObstacle(index) {
-        this.obstacles = this.obstacles.filter((f, i) => i!==index)
+    jumpOverObstacle(index) {
+        this.obstacles[index].jumpOver = true
     }
 
     calculateOpenPosition(minX, maxX, minY, maxY) {

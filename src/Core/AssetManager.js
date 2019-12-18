@@ -1,20 +1,29 @@
 export class AssetManager {
     loadedAssets = {};
+    loadedJumps = {};
 
     constructor() {
     }
 
     async loadAssets(assets) {
         const assetPromises = [];
+        const jumpPromises = [];
 
         for (const [assetName, assetUrl] of Object.entries(assets)) {
-            const assetPromise = this.loadSingleAsset(assetUrl, assetName);
-            assetPromises.push(assetPromise); //  TODO: load 2 images (1 for crash mode)
+            assetPromises.push(this.loadSingleAsset(assetUrl[0], assetName));
+            
+            if (assetUrl.length==2) {
+                jumpPromises.push(this.loadSingleAsset(assetUrl[1], assetName));
+            }
         }
-
         this.loadedAssets = await Promise.all(assetPromises).then( 
             resolves => resolves.reduce((r, c) => ({...r, ...c }), {}) 
         );
+        this.loadedJumps = await Promise.all(jumpPromises).then( 
+            resolves => resolves.reduce((r, c) => ({...r, ...c }), {}) 
+        );
+        console.log(assetPromises, this.loadedAssets)
+        console.log(jumpPromises, this.loadedJumps)
     }
 
     loadSingleAsset(assetUrl, assetName) {
@@ -30,7 +39,14 @@ export class AssetManager {
         });
     }
 
-    getAsset(assetName) {
+    getAsset(assetName, isJumping) {
+        if (isJumping) {
+            // console.log('getAsset should return the "jumping" version...')
+            if (this.loadedJumps[assetName]) {
+                // console.log('...which is ', this.loadedJumps[assetName])
+                return this.loadedJumps[assetName]
+            }
+        } 
         return this.loadedAssets[assetName];
     }
 }

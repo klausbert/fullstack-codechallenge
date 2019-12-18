@@ -23,7 +23,6 @@ export class Skier extends Entity {
 
     updateAsset() {
         this.assetName = Constants.SKIER_DIRECTION_ASSET[this.direction];
-        // this.assetName = this.jumping_y ? Constants.SKIER_JUMP : Constants.SKIER_DIRECTION_ASSET[this.direction];
     }
 
     move() {
@@ -106,11 +105,10 @@ export class Skier extends Entity {
             this.x + asset.width / 2,
             this.y - asset.height / 4
         );
-        console.log('%s obstacles', obstacleManager.getObstacles().length)
         const collision = obstacleManager.getObstacles()
         .find((obstacle, index) => {
             const obstacleAssetName = obstacle.getAssetName();
-            const obstacleAsset = assetManager.getAsset(obstacleAssetName);
+            const obstacleAsset = assetManager.getAsset(obstacleAssetName, this.jumping_y);
             const obstaclePosition = obstacle.getPosition();
             const obstacleBounds = new Rect(
                 obstaclePosition.x - obstacleAsset.width / 2,
@@ -120,20 +118,13 @@ export class Skier extends Entity {
             );
             let intersected = intersectTwoRects(skierBounds, obstacleBounds);
 
-            if (intersected) {
-                if (obstacleAssetName===Constants.JUMP_RAMP) {
-                    this.jumping_y = this.y + JUMPING_DISTANCE;
-                    console.log('will jump until %s (or tree is hit)', this.jumping_y)
-                    intersected = false
-                }
-                else 
-                if (this.jumping_y > this.y) {
-                    // if (obstacleAssetName!==Constants.TREE && obstacleAssetName!==Constants.TREE_CLUSTER) {
-                        console.log('Im jumping over %s, Mom!', obstacleAssetName)
-                        obstacleManager.removeObstacle(index)
-                        intersected = false
-                    // }
-                }
+            if (intersected && obstacleAssetName===Constants.JUMP_RAMP) {
+                this.jumping_y = this.y + JUMPING_DISTANCE;
+                intersected = false
+            }
+            if (intersected && this.jumping_y > this.y && ! [Constants.TREE, Constants.TREE_CLUSTER].includes(obstacleAssetName)) {
+                obstacleManager.jumpOverObstacle(index);
+                intersected = false
             }
             return intersected
         });
@@ -141,5 +132,11 @@ export class Skier extends Entity {
         if(collision) {
             this.setDirection(Constants.SKIER_DIRECTIONS.CRASH);
         }
-    };
+    }
+    draw(canvas, assetManager) {
+        if (this.jumping_y && this.jumping_y < this.y) {
+            this.jumping_y = 0;
+        }
+        super.draw(canvas, assetManager, this.jumping_y > 0)
+    }
 }

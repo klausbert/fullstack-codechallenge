@@ -16,5 +16,10 @@ export class Obstacle extends Entity {
 
         const assetIdx = randomInt(0, assetTypes.length - 1);
         this.assetName = assetTypes[assetIdx];
+
+        this.jumpOver = false;
+    }
+    draw(canvas, assetManager) {
+        super.draw(canvas, assetManager, this.jumpOver)
     }
 }
