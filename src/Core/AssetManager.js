@@ -22,8 +22,6 @@ export class AssetManager {
         this.loadedJumps = await Promise.all(jumpPromises).then( 
             resolves => resolves.reduce((r, c) => ({...r, ...c }), {}) 
         );
-        console.log(assetPromises, this.loadedAssets)
-        console.log(jumpPromises, this.loadedJumps)
     }
 
     loadSingleAsset(assetUrl, assetName) {
@@ -40,12 +38,9 @@ export class AssetManager {
     }
 
     getAsset(assetName, isJumping) {
-        if (isJumping) {
-            // console.log('getAsset should return the "jumping" version...')
-            if (this.loadedJumps[assetName]) {
-                // console.log('...which is ', this.loadedJumps[assetName])
-                return this.loadedJumps[assetName]
-            }
+        if (isJumping && this.loadedJumps[assetName]) {
+        
+            return this.loadedJumps[assetName]
         } 
         return this.loadedAssets[assetName];
     }
