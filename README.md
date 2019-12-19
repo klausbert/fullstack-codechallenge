@@ -1,3 +1,34 @@
+# So Far so Good...
+**Done (in branch: develop)**
+1. **Write unit tests**
+1. **Fix a bug**
+1. **Extend existing functionality**
+   1. Commit a93b465: obstacles obliterated (deleted)
+   2. Commit bb9f8df: cannot jump over trees (as specified), rocks jumped over catch fire (!)
+2. **Build something new** (work in progress)
+   1. Rhino chases Skier and collides with him (game not over yet)
+   2. Skier speeds up (or rather, Rhino slows down) when jumping or skiing down
+   3. SPACE key pauses / resumes game
+3. **Live hosted version**
+   * http://ski-challenge.pieslinger.net
+
+**Next Features (WIP):**
+1. Game over when Skier chased
+2. Rhino eats Skier icons 
+3. Restart game
+4. Show some scoring
+
+**Changelog as of Dec. 18, 2019:**
+* 87d38a2 - (HEAD -> develop) Rhino (test drive) (13 hours ago) <Klaus Pieslinger>
+* bb9f8df - (origin/develop) Obstacles jumped over catch fire! (16 hours ago) <Klaus Pieslinger>
+* 56b67f6 - Keep list of Obstacles skinny (18 hours ago) <Klaus Pieslinger>
+* 0b41e4e - SPACE pauses / resumes Game (19 hours ago) <Klaus Pieslinger>
+* c1755b0 - Interim backup: refactored loading of asset images (4 days ago) <Klaus Pieslinger>
+* a93b465 - Interim release: Clueless Bumper (4 days ago) <Klaus Pieslinger>
+* 51d3946 - Skier: fix lower-bound error after crash (8 days ago) <Klaus Pieslinger>
+* 4c6b9c2 - Added test for Crash-Left error (8 days ago) <Klaus Pieslinger>
+* 3b1ca59 - (origin/master, origin/HEAD, master) get this party started. (8 weeks ago) <Lean>
+
 # Southteams Ski Code Challenge
 
 Welcome to the Southteams Code Challenge - Ski Edition!
