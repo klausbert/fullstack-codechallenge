@@ -101,27 +101,10 @@ export class Skier extends Entity {
         this.setDirection(Constants.SKIER_DIRECTIONS.DOWN);
     }
 
-    calcSkierBounds(assetManager) {
-        const asset = assetManager.getAsset(this.assetName);
-
-        return new Rect(
-            this.x - asset.width / 2,
-            this.y - asset.height / 2,
-            this.x + asset.width / 2,
-            this.y - asset.height / 4
-        );
-    }
     checkIfSkierWasChased(theThing, assetManager) {
-        const skierBounds = this.calcSkierBounds(assetManager);
+        const skierBounds = this.calcEntityBounds(assetManager);
+        const thingBounds = theThing.calcEntityBounds(assetManager);
 
-        const thingAsset = assetManager.getAsset(theThing.getAssetName())
-        const thingPosition = theThing.getPosition()
-        const thingBounds = new Rect(
-            thingPosition.x - thingAsset.width / 2,
-            thingPosition.y - thingAsset.height / 2,
-            thingPosition.x + thingAsset.width / 2,
-            thingPosition.y
-        );
         const collision = intersectTwoRects(skierBounds, thingBounds);
         
         if (collision) {
@@ -132,19 +115,14 @@ export class Skier extends Entity {
     }
 
     checkIfSkierHitObstacle(obstacleManager, assetManager) {
-        const skierBounds = this.calcSkierBounds(assetManager);
+        const skierBounds = this.calcEntityBounds(assetManager);
 
         const collision = obstacleManager.getObstacles()
         .find((obstacle, index) => {
             const obstacleAssetName = obstacle.getAssetName();
-            const obstacleAsset = assetManager.getAsset(obstacleAssetName);
-            const obstaclePosition = obstacle.getPosition();
-            const obstacleBounds = new Rect(
-                obstaclePosition.x - obstacleAsset.width / 2,
-                obstaclePosition.y - obstacleAsset.height / 2,
-                obstaclePosition.x + obstacleAsset.width / 2,
-                obstaclePosition.y
-            );
+
+            const obstacleBounds = obstacle.calcEntityBounds(assetManager);
+
             let intersected = intersectTwoRects(skierBounds, obstacleBounds);
 
             if (intersected && obstacleAssetName===Constants.JUMP_RAMP) {

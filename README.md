@@ -11,23 +11,24 @@
    3. SPACE key pauses / resumes game
 3. **Live hosted version**
    * http://ski-challenge.pieslinger.net
+4. **Game over when Skier chased / Restart game**
 
 **Next Features (WIP):**
-1. Game over when Skier chased
-2. Rhino eats Skier icons 
-3. Restart game
-4. Show some scoring
+1. Rhino eats Skier icons 
+2. Show some scoring
 
 **Changelog as of Dec. 18, 2019:**
-* 87d38a2 - (HEAD -> develop) Rhino (test drive) (13 hours ago) <Klaus Pieslinger>
-* bb9f8df - (origin/develop) Obstacles jumped over catch fire! (16 hours ago) <Klaus Pieslinger>
-* 56b67f6 - Keep list of Obstacles skinny (18 hours ago) <Klaus Pieslinger>
-* 0b41e4e - SPACE pauses / resumes Game (19 hours ago) <Klaus Pieslinger>
-* c1755b0 - Interim backup: refactored loading of asset images (4 days ago) <Klaus Pieslinger>
-* a93b465 - Interim release: Clueless Bumper (4 days ago) <Klaus Pieslinger>
-* 51d3946 - Skier: fix lower-bound error after crash (8 days ago) <Klaus Pieslinger>
-* 4c6b9c2 - Added test for Crash-Left error (8 days ago) <Klaus Pieslinger>
-* 3b1ca59 - (origin/master, origin/HEAD, master) get this party started. (8 weeks ago) <Lean>
+* 7e8097b - (HEAD -> develop) Game Over / Restart (ESC); also: All Entities belong to the same Canvas (56 seconds ago) <Klaus Pieslinger>
+* 0f95b2a - (origin/develop) First release to Production, updated README (3 days ago) <Klaus Pieslinger>
+* 87d38a2 - Rhino (test drive) (4 days ago) <Klaus Pieslinger>
+* bb9f8df - Obstacles jumped over catch fire! (4 days ago) <Klaus Pieslinger>
+* 56b67f6 - Keep list of Obstacles skinny (4 days ago) <Klaus Pieslinger>
+* 0b41e4e - SPACE pauses / resumes Game (4 days ago) <Klaus Pieslinger>
+* c1755b0 - Interim backup: refactored loading of asset images (7 days ago) <Klaus Pieslinger>
+* a93b465 - Interim release: Clueless Bumper (7 days ago) <Klaus Pieslinger>
+* 51d3946 - Skier: fix lower-bound error after crash (11 days ago) <Klaus Pieslinger>
+* 4c6b9c2 - Added test for Crash-Left error (11 days ago) <Klaus Pieslinger>
+* 3b1ca59 - (origin/master, origin/HEAD, master) get this party started. (9 weeks ago) <Lean>
 
 # Southteams Ski Code Challenge
 
