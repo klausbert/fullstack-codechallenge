@@ -8,14 +8,15 @@ import { Rect } from './Utils';
 
 export class Game {
     gameWindow = null;
+    gameOver = false;
     frameRequest = null;
 
     constructor() {
         this.assetManager = new AssetManager();
         this.canvas = new Canvas(Constants.GAME_WIDTH, Constants.GAME_HEIGHT);
-        this.skier = new Skier(0, 0);
-        this.rhino = new Rhino(-20, -20);
-        this.obstacleManager = new ObstacleManager();
+        this.skier = new Skier(0, 0, this.canvas);
+        this.rhino = new Rhino(-20, -20, this.canvas);
+        this.obstacleManager = new ObstacleManager(this.canvas);
 
         document.addEventListener('keydown', this.handleKeyDown.bind(this));
     }
@@ -28,13 +29,19 @@ export class Game {
         this.obstacleManager.placeInitialObstacles();
     }
 
-    run() {
-        this.canvas.clearCanvas();
+    run() {        
+        if (! this.gameOver) {
+            this.canvas.clearCanvas();
 
-        this.updateGameWindow();
-        this.drawGameWindow();
-
-        this.frameRequest = requestAnimationFrame(this.run.bind(this));
+            this.gameOver = this.updateGameWindow();
+            this.drawGameWindow();
+            
+            this.frameRequest = requestAnimationFrame(this.run.bind(this));
+        } else {
+            //  game over here
+            cancelAnimationFrame(this.frameRequest);
+            console.log('THE END (draw Rhino)')
+        }
     }
 
     updateGameWindow() {
@@ -47,15 +54,16 @@ export class Game {
         this.obstacleManager.placeNewObstacle(this.gameWindow, previousGameWindow);
 
         this.skier.checkIfSkierHitObstacle(this.obstacleManager, this.assetManager);
-        this.skier.checkIfSkierWasChased(this.rhino, this.assetManager);
+
+        return this.skier.checkIfSkierWasChased(this.rhino, this.assetManager);
     }
 
     drawGameWindow() {
         this.canvas.setDrawOffset(this.gameWindow.left, this.gameWindow.top);
 
-        this.skier.draw(this.canvas, this.assetManager);
-        this.rhino.draw(this.canvas, this.assetManager);
-        this.obstacleManager.drawObstacles(this.canvas, this.assetManager);
+        this.skier.draw(this.assetManager);
+        this.rhino.draw(this.assetManager);
+        this.obstacleManager.drawObstacles(this.assetManager);
     }
 
     calculateGameWindow() {
@@ -93,6 +101,15 @@ export class Game {
                     console.log('Game resumed!')
                     this.run();
                 }
+                event.preventDefault();
+                break;
+            case Constants.KEYS.ESC:
+                this.gameOver = false;
+                Object.assign(this.skier, { x: 0, y: 0 });
+                this.skier.init();
+                Object.assign(this.rhino, { x: 0, y: -50 });
+                this.init();
+                this.run();
                 event.preventDefault();
                 break;
             default:

@@ -10,26 +10,27 @@ const NEW_OBSTACLE_CHANCE = 8;
 export class ObstacleManager {
     obstacles = [];
 
-    constructor() {
+    constructor(canvas) {
+        this.canvas = canvas;
     }
 
     getObstacles() {
         return this.obstacles;
     }
 
-    drawObstacles(canvas, assetManager) {
+    drawObstacles(assetManager) {
         this.obstacles.forEach((obstacle) => {
-            obstacle.draw(canvas, assetManager);
+            obstacle.draw(assetManager);
         });
     }
 
     placeInitialObstacles() {
         const numberObstacles = Math.ceil((Constants.GAME_WIDTH / STARTING_OBSTACLE_REDUCER) * (Constants.GAME_HEIGHT / STARTING_OBSTACLE_REDUCER));
 
-        const minX = -Constants.GAME_WIDTH / 2;
-        const maxX = Constants.GAME_WIDTH / 2;
+        const minX = -Math.floor(Constants.GAME_WIDTH / 2);
+        const maxX = Math.ceil(Constants.GAME_WIDTH / 2);
         const minY = STARTING_OBSTACLE_GAP;
-        const maxY = Constants.GAME_HEIGHT / 2;
+        const maxY = Math.ceil(Constants.GAME_HEIGHT / 2);
 
         for(let i = 0; i < numberObstacles; i++) {
             this.placeRandomObstacle(minX, maxX, minY, maxY);
@@ -86,7 +87,7 @@ export class ObstacleManager {
 
     placeRandomObstacle(minX, maxX, minY, maxY) {
         const position = this.calculateOpenPosition(minX, maxX, minY, maxY);
-        const newObstacle = new Obstacle(position.x, position.y);
+        const newObstacle = new Obstacle(position.x, position.y, this.canvas);
 
         this.obstacles.push(newObstacle);
     }
@@ -95,7 +96,7 @@ export class ObstacleManager {
         this.obstacles[index].jumpOver = true
     }
 
-    calculateOpenPosition(minX, maxX, minY, maxY) {
+    calculateOpenPosition(minX, maxX, minY, maxY, depth = 0) {
         const x = randomInt(minX, maxX);
         const y = randomInt(minY, maxY);
 
@@ -109,7 +110,9 @@ export class ObstacleManager {
         });
 
         if(foundCollision) {
-            return this.calculateOpenPosition(minX, maxX, minY, maxY);
+            console.log('recalculate open position', minX, maxX, minY, maxY, ++depth, x, y);
+
+            return this.calculateOpenPosition(minX, maxX, minY, maxY, depth);
         }
         else {
             return {

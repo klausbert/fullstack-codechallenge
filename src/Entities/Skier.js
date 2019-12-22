@@ -4,15 +4,20 @@ import { intersectTwoRects, Rect } from "../Core/Utils";
 
 
 export class Skier extends Entity {
-    assetName = Constants.SKIER_DOWN;
 
-    direction = Constants.SKIER_DIRECTIONS.DOWN;
-    speed = Constants.SKIER_STARTING_SPEED;
+    constructor(x, y, canvas) {
+        super(x, y, canvas);
 
-    jumping_y = 0;
+        this.init();
+    }
 
-    constructor(x, y) {
-        super(x, y);
+    init() {
+        this.assetName = Constants.SKIER_DOWN;
+
+        this.direction = Constants.SKIER_DIRECTIONS.DOWN;
+        this.speed = Constants.SKIER_STARTING_SPEED;
+
+        this.jumping_y = 0;
     }
 
     setDirection(direction) {
@@ -123,6 +128,7 @@ export class Skier extends Entity {
             this.setDirection(Constants.SKIER_DIRECTIONS.CRASH)
             console.log('Aaaargh! The Thing caught me!')
         }
+        return collision
     }
 
     checkIfSkierHitObstacle(obstacleManager, assetManager) {
@@ -156,10 +162,10 @@ export class Skier extends Entity {
             this.setDirection(Constants.SKIER_DIRECTIONS.CRASH);
         }
     }
-    draw(canvas, assetManager) {
+    draw(assetManager) {
         if (this.jumping_y && this.jumping_y < this.y) {
             this.jumping_y = 0;
         }
-        super.draw(canvas, assetManager, this.jumping_y > 0)
+        super.draw(assetManager, this.jumping_y > 0)
     }
 }

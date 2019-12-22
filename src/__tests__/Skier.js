@@ -11,7 +11,7 @@ test('Skier recovers from Crash using any Arrow key', () => {
     expect(skier.y).toBe(0);
     expect(skier.assetName).toBe('skierDown');
     expect(skier.direction).toBe(3);
-    expect(skier.speed).toBe(10);
+    expect(skier.speed).toBe(5);
     
     //  force crash and recover
     skier.setDirection(Constants.SKIER_DIRECTIONS.CRASH)   //  CRASH

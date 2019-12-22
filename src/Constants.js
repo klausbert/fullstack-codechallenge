@@ -29,7 +29,7 @@ export const ASSETS = {
     [ROCK1] :          ['img/rock_1.png',           'img/fire.png'],
     [ROCK2] :          ['img/rock_2.png',           'img/fire.png'],
     [JUMP_RAMP] :      ['img/jump_ramp.png'],
-    [RHINO] :          ['img/rhino_default.png'],
+    [RHINO] :          ['img/rhino_default.png',    'img/rhino_lift_eat_4.png'],
 };
 
 export const SKIER_DIRECTIONS = {
@@ -55,7 +55,8 @@ export const KEYS = {
     RIGHT : 39,
     UP : 38,
     DOWN : 40,
-    SPACE: 32
+    SPACE: 32,
+    ESC: 27
 };
 
 export const OBSTACLES = {

@@ -4,9 +4,10 @@ export class Entity {
 
     assetName = '';
 
-    constructor(x, y) {
+    constructor(x, y, canvas) {
         this.x = x;
         this.y = y;
+        this.canvas = canvas
     }
 
     getAssetName() {
@@ -20,11 +21,11 @@ export class Entity {
         };
     }
 
-    draw(canvas, assetManager, jumpMode = false) {
+    draw(assetManager, jumpMode = false) {
         const asset = assetManager.getAsset(this.assetName, jumpMode);
         const drawX = this.x - asset.width / 2;
         const drawY = this.y - asset.height / 2;
 
-        canvas.drawImage(asset, drawX, drawY, asset.width, asset.height);
+        this.canvas.drawImage(asset, drawX, drawY, asset.width, asset.height);
     }
 }

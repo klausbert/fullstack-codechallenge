@@ -3,8 +3,8 @@ import { Entity } from "./Entity";
 
 
 export class Rhino extends Entity {
-    constructor(x, y) {
-        super(x, y);
+    constructor(x, y, canvas) {
+        super(x, y, canvas);
 
         this.assetName = Constants.RHINO;
     }
