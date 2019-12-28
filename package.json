@@ -1,6 +1,6 @@
 {
   "name": "southteams-ski",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Southteams full stack developer code challenge",
   "main": "index.js",
   "scripts": {
