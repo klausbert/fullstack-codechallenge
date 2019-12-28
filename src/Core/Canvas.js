@@ -26,6 +26,9 @@ export class Canvas {
 
         this.ctx = canvas.getContext("2d");
         this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+        //  setup text
+        this.ctx.fillStyle = "blue";
+        this.ctx.font = "bold 16px Helvetica";
 
         document.body.appendChild(canvas);
     }
@@ -37,6 +40,11 @@ export class Canvas {
     setDrawOffset(x, y) {
         this.drawOffset.x = x;
         this.drawOffset.y = y;
+    }
+
+    setText(score, status) {
+        this.ctx.fillText(score,  3, 18);
+        this.ctx.fillText(status, 3, 36);
     }
 
     drawImage(image, x, y, width, height) {

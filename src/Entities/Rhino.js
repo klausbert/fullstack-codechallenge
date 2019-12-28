@@ -1,5 +1,6 @@
 import * as Constants from "../Constants";
 import { Entity } from "./Entity";
+import { intersectTwoRects } from "../Core/Utils";
 
 
 export class Rhino extends Entity {
@@ -18,5 +19,17 @@ export class Rhino extends Entity {
         //  P = (1 - t) P1 + t P2
         this.x = (1 - t) * this.x + t * target.x;
         this.y = (1 - t) * this.y + t * target.y;
+    }
+    checkIfSkierWasChased(skier, assetManager) {
+        const skierBounds = skier.calcEntityBounds(assetManager);
+        const thingBounds = this.calcEntityBounds(assetManager);
+
+        const collision = intersectTwoRects(skierBounds, thingBounds);
+        
+        if (collision) {
+            skier.setDirection(Constants.SKIER_DIRECTIONS.CRASH)
+            console.log('Aaaargh! The Thing caught me!')
+        }
+        return collision
     }
 }

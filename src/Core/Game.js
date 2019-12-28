@@ -7,9 +7,11 @@ import { ObstacleManager } from "../Entities/Obstacles/ObstacleManager";
 import { Rect } from './Utils';
 
 export class Game {
-    gameWindow = null;
-    gameOver = false;
-    frameRequest = null;
+    gameWindow;
+    frameRequest;
+
+    gameOver;
+    statusText;
 
     constructor() {
         this.assetManager = new AssetManager();
@@ -26,21 +28,25 @@ export class Game {
     }
 
     init() {
+        this.gameOver = false;
+        this.statusText = 'Running!';
+
         this.obstacleManager.placeInitialObstacles();
     }
 
     run() {        
-        if (! this.gameOver) {
-            this.canvas.clearCanvas();
+        this.canvas.clearCanvas();
 
-            this.gameOver = this.updateGameWindow();
-            this.drawGameWindow();
-            
-            this.frameRequest = requestAnimationFrame(this.run.bind(this));
-        } else {
-            //  game over here
+        if (this.updateGameWindow()) {
+            this.gameOver = true;
+            this.statusText = 'GAME OVER';
+        }
+        this.drawGameWindow();
+
+        if (this.gameOver) {
             cancelAnimationFrame(this.frameRequest);
-            console.log('THE END (draw Rhino)')
+        } else {    
+            this.frameRequest = requestAnimationFrame(this.run.bind(this));
         }
     }
 
@@ -55,12 +61,12 @@ export class Game {
 
         this.skier.checkIfSkierHitObstacle(this.obstacleManager, this.assetManager);
 
-        return this.skier.checkIfSkierWasChased(this.rhino, this.assetManager);
+        return this.rhino.checkIfSkierWasChased(this.skier, this.assetManager);
     }
 
     drawGameWindow() {
         this.canvas.setDrawOffset(this.gameWindow.left, this.gameWindow.top);
-
+        this.canvas.setText('Score: '+ Math.floor(this.skier.y / 54), this.statusText);
         this.skier.draw(this.assetManager);
         this.rhino.draw(this.assetManager);
         this.obstacleManager.drawObstacles(this.assetManager);
@@ -75,42 +81,40 @@ export class Game {
     }
 
     handleKeyDown(event) {
+        event.preventDefault();
+
         switch(event.which) {
             case Constants.KEYS.LEFT:
                 this.skier.turnLeft();
-                event.preventDefault();
                 break;
             case Constants.KEYS.RIGHT:
                 this.skier.turnRight();
-                event.preventDefault();
                 break;
             case Constants.KEYS.UP:
                 this.skier.turnUp();
-                event.preventDefault();
                 break;
             case Constants.KEYS.DOWN:
                 this.skier.turnDown();
-                event.preventDefault();
                 break;
             case Constants.KEYS.SPACE:
                 if (this.frameRequest) {
                     cancelAnimationFrame(this.frameRequest);
                     this.frameRequest = null;
-                    console.log('Game paused...')
+                    this.statusText = 'Paused...';
+                    this.drawGameWindow();
                 } else {
-                    console.log('Game resumed!')
+                    this.statusText = 'Running!';
                     this.run();
                 }
-                event.preventDefault();
                 break;
             case Constants.KEYS.ESC:
-                this.gameOver = false;
-                Object.assign(this.skier, { x: 0, y: 0 });
+                if (! this.gameOver) break;
+
                 this.skier.init();
-                Object.assign(this.rhino, { x: 0, y: -50 });
+                Object.assign(this.rhino, { y: this.skier.y - 100 });
+
                 this.init();
                 this.run();
-                event.preventDefault();
                 break;
             default:
                 console.log('Other Key pressed:', event.which)

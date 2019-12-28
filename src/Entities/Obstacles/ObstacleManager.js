@@ -109,16 +109,13 @@ export class ObstacleManager {
             );
         });
 
-        if(foundCollision) {
-            console.log('recalculate open position', minX, maxX, minY, maxY, ++depth, x, y);
+        if (foundCollision && depth < 100) {
+            // console.log('recalculate open position', minX, maxX, minY, maxY, ++depth, x, y);
 
             return this.calculateOpenPosition(minX, maxX, minY, maxY, depth);
         }
         else {
-            return {
-                x: x,
-                y: y
-            };
+            return { x, y };
         }
     }
 }

@@ -1,6 +1,6 @@
 import * as Constants from "../Constants";
 import { Entity } from "./Entity";
-import { intersectTwoRects, Rect } from "../Core/Utils";
+import { intersectTwoRects } from "../Core/Utils";
 
 
 export class Skier extends Entity {
@@ -101,18 +101,18 @@ export class Skier extends Entity {
         this.setDirection(Constants.SKIER_DIRECTIONS.DOWN);
     }
 
-    checkIfSkierWasChased(theThing, assetManager) {
-        const skierBounds = this.calcEntityBounds(assetManager);
-        const thingBounds = theThing.calcEntityBounds(assetManager);
+    // checkIfSkierWasChased(theThing, assetManager) {
+    //     const skierBounds = this.calcEntityBounds(assetManager);
+    //     const thingBounds = theThing.calcEntityBounds(assetManager);
 
-        const collision = intersectTwoRects(skierBounds, thingBounds);
+    //     const collision = intersectTwoRects(skierBounds, thingBounds);
         
-        if (collision) {
-            this.setDirection(Constants.SKIER_DIRECTIONS.CRASH)
-            console.log('Aaaargh! The Thing caught me!')
-        }
-        return collision
-    }
+    //     if (collision) {
+    //         this.setDirection(Constants.SKIER_DIRECTIONS.CRASH)
+    //         console.log('Aaaargh! The Thing caught me!')
+    //     }
+    //     return collision
+    // }
 
     checkIfSkierHitObstacle(obstacleManager, assetManager) {
         const skierBounds = this.calcEntityBounds(assetManager);
