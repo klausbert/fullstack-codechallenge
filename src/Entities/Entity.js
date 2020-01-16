@@ -4,8 +4,9 @@ import { Rect } from "../Core/Utils";
 export class Entity {
     x = 0;
     y = 0;
-
     assetName = '';
+
+    loadedAssets = {};
 
     constructor(x, y, canvas) {
         this.x = x;
@@ -13,19 +14,33 @@ export class Entity {
         this.canvas = canvas
     }
 
+    async loadAssets(assetManager, assets) {
+        this.loadedAssets = await assetManager.loadAssets(assets);
+        
+        return this.loadedAssets
+    }
+
+    getAsset() {
+        const asset = this.loadedAssets[this.canvas.currentState]
+
+        if (! asset) {
+            const defaultState = Object.keys(this.loadedAssets)[0]
+            
+            return this.loadedAssets[defaultState]
+        } 
+        return asset
+    }
+
     getAssetName() {
         return this.assetName;
     }
 
     getPosition() {
-        return {
-            x: this.x,
-            y: this.y
-        };
+        return { x: this.x, y: this.y };
     }
 
-    calcEntityBounds(assetManager) {
-        const asset = assetManager.getAsset(this.assetName);
+    calcEntityBounds() {
+        const asset = this.getAsset();
 
         return new Rect(
             this.x - asset.width / 2,
@@ -35,8 +50,8 @@ export class Entity {
         );
     }
 
-    draw(assetManager, jumpMode = false) {
-        const asset = assetManager.getAsset(this.assetName, jumpMode);
+    draw() {
+        const asset = this.getAsset();
         const drawX = this.x - asset.width / 2;
         const drawY = this.y - asset.height / 2;
 

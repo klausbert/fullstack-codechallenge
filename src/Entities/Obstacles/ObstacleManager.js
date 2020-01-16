@@ -10,18 +10,24 @@ const NEW_OBSTACLE_CHANCE = 8;
 export class ObstacleManager {
     obstacles = [];
 
+    loadedAssets = {};
+
     constructor(canvas) {
         this.canvas = canvas;
+    }
+
+    async loadAssets(assetManager, assets) {  //  same signature but not an Entity
+        this.loadedAssets = await assetManager.loadAssets(assets);
+        
+        return this.loadedAssets
     }
 
     getObstacles() {
         return this.obstacles;
     }
 
-    drawObstacles(assetManager) {
-        this.obstacles.forEach((obstacle) => {
-            obstacle.draw(assetManager);
-        });
+    drawObstacles() {
+        this.obstacles.forEach( obstacle => obstacle.draw() );
     }
 
     placeInitialObstacles() {
@@ -89,6 +95,16 @@ export class ObstacleManager {
         const position = this.calculateOpenPosition(minX, maxX, minY, maxY);
         const newObstacle = new Obstacle(position.x, position.y, this.canvas);
 
+        // const loadedAssets = this.loadedAssets[newObstacle.assetName];
+        const loadedAssets = Object.keys(this.loadedAssets).reduce((r, k) => {
+            const asset = this.loadedAssets[k][newObstacle.assetName]
+
+            if (! asset) return r
+
+            return {...r, [k]: asset }
+        }, {});
+        Object.assign(newObstacle, { loadedAssets });
+        
         this.obstacles.push(newObstacle);
     }
 
@@ -110,8 +126,6 @@ export class ObstacleManager {
         });
 
         if (foundCollision && depth < 100) {
-            // console.log('recalculate open position', minX, maxX, minY, maxY, ++depth, x, y);
-
             return this.calculateOpenPosition(minX, maxX, minY, maxY, depth);
         }
         else {

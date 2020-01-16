@@ -19,7 +19,7 @@ export class Obstacle extends Entity {
 
         this.jumpOver = false;
     }
-    draw(assetManager) {
-        super.draw(assetManager, this.jumpOver)
+    draw() {
+        super.draw()
     }
 }

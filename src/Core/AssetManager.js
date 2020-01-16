@@ -1,27 +1,22 @@
 export class AssetManager {
-    loadedAssets = {};
-    loadedJumps = {};
-
     constructor() {
     }
 
     async loadAssets(assets) {
-        const assetPromises = [];
-        const jumpPromises = [];
+        const myAssets = {}
 
         for (const [assetName, assetUrl] of Object.entries(assets)) {
-            assetPromises.push(this.loadSingleAsset(assetUrl[0], assetName));
-            
-            if (assetUrl.length==2) {
-                jumpPromises.push(this.loadSingleAsset(assetUrl[1], assetName));
+            if (typeof(assetUrl)==='object') {
+                Object.assign(myAssets, {[assetName]: (await this.loadAssets(assetUrl))})
+            } else
+            if (typeof(assetUrl)==='string') {
+                Object.assign(myAssets, (await this.loadSingleAsset(assetUrl, assetName)))
+            } else
+            {
+                console.log('Unexpected type %s for %s', typeof(assetUrl), assetName)
             }
         }
-        this.loadedAssets = await Promise.all(assetPromises).then( 
-            resolves => resolves.reduce((r, c) => ({...r, ...c }), {}) 
-        );
-        this.loadedJumps = await Promise.all(jumpPromises).then( 
-            resolves => resolves.reduce((r, c) => ({...r, ...c }), {}) 
-        );
+        return myAssets;
     }
 
     loadSingleAsset(assetUrl, assetName) {
@@ -35,13 +30,5 @@ export class AssetManager {
             };
             assetImage.src = assetUrl;
         });
-    }
-
-    getAsset(assetName, isJumping) {
-        if (isJumping && this.loadedJumps[assetName]) {
-        
-            return this.loadedJumps[assetName]
-        } 
-        return this.loadedAssets[assetName];
     }
 }

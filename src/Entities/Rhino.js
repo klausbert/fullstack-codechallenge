@@ -20,9 +20,9 @@ export class Rhino extends Entity {
         this.x = (1 - t) * this.x + t * target.x;
         this.y = (1 - t) * this.y + t * target.y;
     }
-    checkIfSkierWasChased(skier, assetManager) {
-        const skierBounds = skier.calcEntityBounds(assetManager);
-        const thingBounds = this.calcEntityBounds(assetManager);
+    checkIfSkierWasChased(skier) {
+        const skierBounds = skier.calcEntityBounds();
+        const thingBounds = this.calcEntityBounds();
 
         const collision = intersectTwoRects(skierBounds, thingBounds);
         

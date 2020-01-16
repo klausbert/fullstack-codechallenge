@@ -7,14 +7,14 @@ export class Skier extends Entity {
 
     constructor(x, y, canvas) {
         super(x, y, canvas);
-
+        
         this.init();
     }
 
     init() {
-        this.assetName = Constants.SKIER_DOWN;
-
         this.direction = Constants.SKIER_DIRECTIONS.DOWN;
+        this.assetName = Constants.SKIER_DIRECTION_ASSET[this.direction];
+
         this.speed = Constants.SKIER_STARTING_SPEED;
 
         this.jumping_y = 0;
@@ -22,11 +22,12 @@ export class Skier extends Entity {
 
     setDirection(direction) {
         this.direction = direction;
-        this.updateAsset();
+        this.assetName = Constants.SKIER_DIRECTION_ASSET[this.direction];
     }
 
-    updateAsset() {
-        this.assetName = Constants.SKIER_DIRECTION_ASSET[this.direction];
+    getAsset() {
+        const asset = super.getAsset()
+        return asset[this.assetName] || asset;  //  either Object or String
     }
 
     move() {
@@ -101,49 +102,40 @@ export class Skier extends Entity {
         this.setDirection(Constants.SKIER_DIRECTIONS.DOWN);
     }
 
-    // checkIfSkierWasChased(theThing, assetManager) {
-    //     const skierBounds = this.calcEntityBounds(assetManager);
-    //     const thingBounds = theThing.calcEntityBounds(assetManager);
-
-    //     const collision = intersectTwoRects(skierBounds, thingBounds);
-        
-    //     if (collision) {
-    //         this.setDirection(Constants.SKIER_DIRECTIONS.CRASH)
-    //         console.log('Aaaargh! The Thing caught me!')
-    //     }
-    //     return collision
-    // }
-
-    checkIfSkierHitObstacle(obstacleManager, assetManager) {
-        const skierBounds = this.calcEntityBounds(assetManager);
+    checkIfSkierHitObstacle(obstacleManager) {
+        const skierBounds = this.calcEntityBounds();
 
         const collision = obstacleManager.getObstacles()
         .find((obstacle, index) => {
             const obstacleAssetName = obstacle.getAssetName();
+            const obstacleBounds = obstacle.calcEntityBounds();
 
-            const obstacleBounds = obstacle.calcEntityBounds(assetManager);
-
-            let intersected = intersectTwoRects(skierBounds, obstacleBounds);
-
-            if (intersected && obstacleAssetName===Constants.JUMP_RAMP) {
-                this.jumping_y = this.y + Constants.SKIER_JUMPING_DISTANCE;
-                intersected = false
+            if (intersectTwoRects(skierBounds, obstacleBounds)) {
+                if (obstacleAssetName===Constants.JUMP_RAMP) {
+                    this.jumping_y = this.y + Constants.SKIER_JUMPING_DISTANCE;
+                    this.canvas.currentState = Constants.STATE_JUMPING;
+                    return false;
+                }
+                if (this.jumping_y > this.y && ! [Constants.TREE, Constants.TREE_CLUSTER].includes(obstacleAssetName)) {
+                    obstacleManager.jumpOverObstacle(index);
+                    return false;
+                }
+                return true;
             }
-            if (intersected && this.jumping_y > this.y && ! [Constants.TREE, Constants.TREE_CLUSTER].includes(obstacleAssetName)) {
-                obstacleManager.jumpOverObstacle(index);
-                intersected = false
-            }
-            return intersected
+            return false;
         });
 
-        if(collision) {
+        if (collision) {
             this.setDirection(Constants.SKIER_DIRECTIONS.CRASH);
+            this.canvas.currentState = Constants.STATE_CRASHED;
         }
     }
-    draw(assetManager) {
+
+    draw() {
         if (this.jumping_y && this.jumping_y < this.y) {
             this.jumping_y = 0;
+            this.canvas.currentState = Constants.STATE_SKIING;
         }
-        super.draw(assetManager, this.jumping_y > 0)
+        super.draw()
     }
 }

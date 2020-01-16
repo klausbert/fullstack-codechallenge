@@ -3,11 +3,10 @@ export class Canvas {
     y = 0;
     width = 0;
     height = 0;
-    drawOffset = {
-        x: 0,
-        y: 0
-    };
+    drawOffset = { x: 0, y: 0 };
     ctx = null;
+
+    currentState = null;
 
     constructor(width, height) {
         this.width = width;
@@ -18,6 +17,7 @@ export class Canvas {
 
     createCanvas() {
         const canvas = document.createElement('canvas');
+
         canvas.id = "skiCanvas";
         canvas.width = this.width * window.devicePixelRatio;
         canvas.height = this.height * window.devicePixelRatio;
@@ -44,7 +44,7 @@ export class Canvas {
 
     setText(score, status) {
         this.ctx.fillText(score,  3, 18);
-        this.ctx.fillText(status, 3, 36);
+        this.ctx.fillText(this.currentState, 3, 36);
     }
 
     drawImage(image, x, y, width, height) {

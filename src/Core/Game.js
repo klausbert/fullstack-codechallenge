@@ -1,10 +1,12 @@
 import * as Constants from "../Constants";
+
 import { AssetManager } from "./AssetManager";
 import { Canvas } from './Canvas';
+import { Rect } from './Utils';
+
 import { Skier } from "../Entities/Skier";
 import { Rhino } from "../Entities/Rhino";
 import { ObstacleManager } from "../Entities/Obstacles/ObstacleManager";
-import { Rect } from './Utils';
 
 export class Game {
     gameWindow;
@@ -16,6 +18,8 @@ export class Game {
     constructor() {
         this.assetManager = new AssetManager();
         this.canvas = new Canvas(Constants.GAME_WIDTH, Constants.GAME_HEIGHT);
+        this.canvas.currentState = Constants.STATE_SKIING;
+
         this.skier = new Skier(0, 0, this.canvas);
         this.rhino = new Rhino(-20, -20, this.canvas);
         this.obstacleManager = new ObstacleManager(this.canvas);
@@ -24,7 +28,13 @@ export class Game {
     }
 
     async load() {
-        await this.assetManager.loadAssets(Constants.ASSETS);
+        await Promise.all([
+            this.skier.loadAssets(this.assetManager, Constants.ASSETS.skier),
+            this.rhino.loadAssets(this.assetManager, Constants.ASSETS.rhino),
+            this.obstacleManager.loadAssets(this.assetManager, Constants.ASSETS.obstacle)
+        ]).then(
+            resolved => console.log('Game.load() resolved')
+        );
     }
 
     init() {
