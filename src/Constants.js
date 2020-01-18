@@ -20,7 +20,9 @@ export const SKIER_DIAGONAL_SPEED_REDUCER = 1.4142;
 export const STATE_SKIING  = 'skiing';
 export const STATE_JUMPING = 'jumping';
 export const STATE_CRASHED = 'crashed';
+export const STATE_PAUSED  = 'paused';
 export const STATE_EATING  = 'eating';
+
 export const ASSETS = {
     skier: {
         [STATE_SKIING]: {

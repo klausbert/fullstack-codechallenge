@@ -12,13 +12,10 @@ export class Game {
     gameWindow;
     frameRequest;
 
-    gameOver;
-    statusText;
-
     constructor() {
         this.assetManager = new AssetManager();
+
         this.canvas = new Canvas(Constants.GAME_WIDTH, Constants.GAME_HEIGHT);
-        this.canvas.currentState = Constants.STATE_SKIING;
 
         this.skier = new Skier(0, 0, this.canvas);
         this.rhino = new Rhino(-20, -20, this.canvas);
@@ -38,22 +35,16 @@ export class Game {
     }
 
     init() {
-        this.gameOver = false;
-        this.statusText = 'Running!';
+        this.canvas.currentState = Constants.STATE_SKIING;
 
         this.obstacleManager.placeInitialObstacles();
     }
 
     run() {        
-        this.canvas.clearCanvas();
-
-        if (this.updateGameWindow()) {
-            this.gameOver = true;
-            this.statusText = 'GAME OVER';
-        }
+        this.updateGameWindow();
         this.drawGameWindow();
 
-        if (this.gameOver) {
+        if (this.canvas.currentState===Constants.STATE_EATING) {
             cancelAnimationFrame(this.frameRequest);
         } else {    
             this.frameRequest = requestAnimationFrame(this.run.bind(this));
@@ -61,22 +52,24 @@ export class Game {
     }
 
     updateGameWindow() {
+        const previousGameWindow = this.gameWindow;
+
         this.skier.move();
         this.rhino.move(this.skier);
 
-        const previousGameWindow = this.gameWindow;
         this.calculateGameWindow();
 
         this.obstacleManager.placeNewObstacle(this.gameWindow, previousGameWindow);
-
         this.skier.checkIfSkierHitObstacle(this.obstacleManager, this.assetManager);
 
         return this.rhino.checkIfSkierWasChased(this.skier, this.assetManager);
     }
 
     drawGameWindow() {
+        this.canvas.clearCanvas();
         this.canvas.setDrawOffset(this.gameWindow.left, this.gameWindow.top);
-        this.canvas.setText('Score: '+ Math.floor(this.skier.y / 54), this.statusText);
+        this.canvas.setScore(Math.floor(this.skier.y / 54), this.canvas.currentState.substr(0));
+
         this.skier.draw(this.assetManager);
         this.rhino.draw(this.assetManager);
         this.obstacleManager.drawObstacles(this.assetManager);
@@ -107,18 +100,17 @@ export class Game {
                 this.skier.turnDown();
                 break;
             case Constants.KEYS.SPACE:
-                if (this.frameRequest) {
-                    cancelAnimationFrame(this.frameRequest);
-                    this.frameRequest = null;
-                    this.statusText = 'Paused...';
-                    this.drawGameWindow();
-                } else {
-                    this.statusText = 'Running!';
+                if (this.canvas.currentState===Constants.STATE_PAUSED) {
+                    this.canvas.currentState = Constants.STATE_SKIING;
                     this.run();
+                } else {
+                    cancelAnimationFrame(this.frameRequest);
+                    this.canvas.currentState = Constants.STATE_PAUSED;
+                    this.drawGameWindow();
                 }
                 break;
             case Constants.KEYS.ESC:
-                if (! this.gameOver) break;
+                if (this.canvas.currentState!==Constants.STATE_EATING) break;
 
                 this.skier.init();
                 Object.assign(this.rhino, { y: this.skier.y - 100 });

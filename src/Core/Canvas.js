@@ -42,9 +42,12 @@ export class Canvas {
         this.drawOffset.y = y;
     }
 
-    setText(score, status) {
-        this.ctx.fillText(score,  3, 18);
-        this.ctx.fillText(this.currentState, 3, 36);
+    setScore(score, text) {
+        this.ctx.fillText('Score: '+ score,  3, 18);
+        this.ctx.fillText(text, 3, 36);
+        if (text==='paused') {
+            console.log(score, text)
+        }
     }
 
     drawImage(image, x, y, width, height) {

@@ -12,15 +12,23 @@ export class Skier extends Entity {
     }
 
     init() {
+        this.canvas.currentState = Constants.STATE_SKIING;
+
         this.direction = Constants.SKIER_DIRECTIONS.DOWN;
         this.assetName = Constants.SKIER_DIRECTION_ASSET[this.direction];
-
         this.speed = Constants.SKIER_STARTING_SPEED;
 
         this.jumping_y = 0;
     }
 
     setDirection(direction) {
+        if (direction===Constants.SKIER_DIRECTIONS.CRASH) {
+            this.canvas.currentState = Constants.STATE_CRASHED;
+        } else {
+            if (this.canvas.currentState===Constants.STATE_CRASHED) {
+                this.canvas.currentState = Constants.STATE_SKIING;
+            }
+        }
         this.direction = direction;
         this.assetName = Constants.SKIER_DIRECTION_ASSET[this.direction];
     }
@@ -106,28 +114,28 @@ export class Skier extends Entity {
         const skierBounds = this.calcEntityBounds();
 
         const collision = obstacleManager.getObstacles()
-        .find((obstacle, index) => {
+        .find( obstacle => {
             const obstacleAssetName = obstacle.getAssetName();
             const obstacleBounds = obstacle.calcEntityBounds();
 
-            if (intersectTwoRects(skierBounds, obstacleBounds)) {
-                if (obstacleAssetName===Constants.JUMP_RAMP) {
-                    this.jumping_y = this.y + Constants.SKIER_JUMPING_DISTANCE;
-                    this.canvas.currentState = Constants.STATE_JUMPING;
-                    return false;
-                }
-                if (this.jumping_y > this.y && ! [Constants.TREE, Constants.TREE_CLUSTER].includes(obstacleAssetName)) {
-                    obstacleManager.jumpOverObstacle(index);
-                    return false;
-                }
-                return true;
+            if (! intersectTwoRects(skierBounds, obstacleBounds)) return false;
+            
+            if (obstacleAssetName===Constants.JUMP_RAMP) {
+                this.jumping_y = this.y + Constants.SKIER_JUMPING_DISTANCE;
+                this.canvas.currentState = Constants.STATE_JUMPING;
+
+                return false;
             }
-            return false;
+            if (this.jumping_y > this.y && ! [Constants.TREE, Constants.TREE_CLUSTER].includes(obstacleAssetName)) {
+                obstacle.jumpOver = true;
+                
+                return false;
+            }
+            return true;
         });
 
         if (collision) {
             this.setDirection(Constants.SKIER_DIRECTIONS.CRASH);
-            this.canvas.currentState = Constants.STATE_CRASHED;
         }
     }
 

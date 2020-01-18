@@ -108,10 +108,6 @@ export class ObstacleManager {
         this.obstacles.push(newObstacle);
     }
 
-    jumpOverObstacle(index) {
-        this.obstacles[index].jumpOver = true
-    }
-
     calculateOpenPosition(minX, maxX, minY, maxY, depth = 0) {
         const x = randomInt(minX, maxX);
         const y = randomInt(minY, maxY);

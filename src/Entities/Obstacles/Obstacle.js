@@ -19,7 +19,13 @@ export class Obstacle extends Entity {
 
         this.jumpOver = false;
     }
-    draw() {
-        super.draw()
+
+    getAsset() {
+        const state = 
+            this.canvas.currentState===Constants.STATE_JUMPING && this.jumpOver ? 
+            this.canvas.currentState : 
+            Object.keys(this.loadedAssets)[0];
+
+        return this.loadedAssets[state];
     }
 }

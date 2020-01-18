@@ -20,6 +20,7 @@ export class Rhino extends Entity {
         this.x = (1 - t) * this.x + t * target.x;
         this.y = (1 - t) * this.y + t * target.y;
     }
+
     checkIfSkierWasChased(skier) {
         const skierBounds = skier.calcEntityBounds();
         const thingBounds = this.calcEntityBounds();
@@ -27,9 +28,10 @@ export class Rhino extends Entity {
         const collision = intersectTwoRects(skierBounds, thingBounds);
         
         if (collision) {
+            //  #1
             skier.setDirection(Constants.SKIER_DIRECTIONS.CRASH)
-            console.log('Aaaargh! The Thing caught me!')
+            //  #2
+            this.canvas.currentState = Constants.STATE_EATING;
         }
-        return collision
     }
 }
